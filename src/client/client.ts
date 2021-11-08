@@ -1,6 +1,115 @@
 import * as THREE from 'three'
 
-var Ball_pos_x = 0;
+import { GUI } from 'three/examples/jsm/libs/dat.gui.module';
+
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
+
+
+
+			//(FOV, Aspect Ratio, Début distance de rendu, fin)
+			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+			//Renderer
+			const renderer = new THREE.WebGLRenderer( { antialias: true } );
+			const scene = new THREE.Scene();
+
+//===================================================================================================================================================
+const ENTIRE_SCENE = 0, BLOOM_SCENE = 1;
+
+const bloomLayer = new THREE.Layers();
+bloomLayer.set( BLOOM_SCENE );
+
+const params = {
+	exposure: 1,
+	bloomStrength: 2,
+	bloomThreshold: 0,
+	bloomRadius: 0,
+	scene: "Scene with Glow"
+};
+
+const darkMaterial = new THREE.MeshBasicMaterial( { color: "black" } );
+const materials = {};
+
+renderer.setPixelRatio( window.devicePixelRatio );
+renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.toneMapping = THREE.ReinhardToneMapping;
+document.body.appendChild( renderer.domElement );
+
+// const controls = new OrbitControls( camera, renderer.domElement );
+// controls.maxPolarAngle = Math.PI * 0.5;
+// controls.minDistance = 1;
+// controls.maxDistance = 100;
+// controls.addEventListener( 'change', render );
+
+// scene.add( new THREE.AmbientLight( 0x404040 ) );
+
+const renderScene = new RenderPass( scene, camera );
+
+const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
+bloomPass.threshold = params.bloomThreshold;
+bloomPass.strength = params.bloomStrength;
+bloomPass.radius = params.bloomRadius;
+
+const bloomComposer = new EffectComposer( renderer );
+bloomComposer.renderToScreen = false;
+bloomComposer.addPass( renderScene );
+bloomComposer.addPass( bloomPass );
+
+const finalPass = new ShaderPass(
+	new THREE.ShaderMaterial( {
+		uniforms: {
+			baseTexture: { value: null },
+			bloomTexture: { value: bloomComposer.renderTarget2.texture }
+		},
+		vertexShader:`			varying vec2 vUv;
+		void main() {
+			vUv = uv;
+			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+		}`,
+		fragmentShader:`			uniform sampler2D baseTexture;
+		uniform sampler2D bloomTexture;
+		varying vec2 vUv;
+		void main() {
+			gl_FragColor = ( texture2D( baseTexture, vUv ) + vec4( 1.0 ) * texture2D( bloomTexture, vUv ) );
+		}`,
+		// vertexShader: document.getElementById( 'vertexshader' ).textContent,
+		// fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
+		defines: {}
+	} ), "baseTexture"
+);
+
+finalPass.needsSwap = true;
+
+const finalComposer = new EffectComposer( renderer );
+finalComposer.addPass( renderScene );
+finalComposer.addPass( finalPass );
+
+const mouse = new THREE.Vector2();
+
+window.onresize = function () {
+
+	const width = window.innerWidth;
+	const height = window.innerHeight;
+
+	camera.aspect = width / height;
+	camera.updateProjectionMatrix();
+
+	renderer.setSize( width, height );
+
+	bloomComposer.setSize( width, height );
+	finalComposer.setSize( width, height );
+
+	// render();
+
+};
+
+//=======================================================================================================================================================
+
+			var Ball_pos_x = 0;
 			var Ball_pos_z = 0;
 			var	Left_bar_pos_x = 0;
 			var	Left_bar_pos_z = 0;
@@ -12,67 +121,32 @@ var Ball_pos_x = 0;
 			var M_2PI = 2 * Math.PI;
 			var M_PI_2 = Math.PI / 2;
 			var M_3PI_2 = 3 * (Math.PI / 2);
-			var	SpeedMultiplier = 0.4;
-			var SpeedLimit = 1.4;
+			var	SpeedMultiplier = 0.1;
+			var SpeedLimit = 0.8;
 			var	LeftHit = 0;
 			var RightHit = 0;
 			var PosDiff = 0;
 			var LeftScore = 0;
 			var RightScore = 0;
 
-			//La scene va stocker les elements 3D
-			const scene = new THREE.Scene();
-
-			//(FOV, Aspect Ratio, Début distance de rendu, fin)
-			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-
-			//Renderer
-			const renderer = new THREE.WebGLRenderer();
-			renderer.setSize( window.innerWidth, window.innerHeight );
-			document.body.appendChild( renderer.domElement );
-
-
-			//Audio
-
-// 			const listener = new THREE.AudioListener();
-// camera.add( listener );
-
-// // create the PositionalAudio object (passing in the listener)
-// const sound = new THREE.PositionalAudio( listener );
-
-// // load a sound and set it as the PositionalAudio object's buffer
-// const audioLoader = new THREE.AudioLoader();
-// audioLoader.load( 'sounds/main_song.mp3', function( buffer ) {
-// 	sound.setBuffer( buffer );
-// 	sound.setRefDistance( 20 );
-// 	sound.play();
-// });
-
-// // create an object for the sound to play from
-// const sphere = new THREE.SphereGeometry( 0, 5, 0 );
-// const material = new THREE.MeshPhongMaterial( { color: 0xff2200 } );
-// const mesh = new THREE.Mesh( sphere, material );
-// scene.add( mesh );
-
-// // finally add the sound to the mesh
-// mesh.add( sound );
+			//Audio ==========================================================
 
 const fftSize = 32;
 
 const audioListener = new THREE.AudioListener();
-let audio = new THREE.Audio(audioListener);
+const audio = new THREE.Audio(audioListener);
 
 const audioLoader = new THREE.AudioLoader();
 // Load audio file inside asset folder
 // audioLoader.load('sounds/376737_Skullbeatz___Bad_Cat_Maste.mp3', (buffer) => {
-	audioLoader.load('./sounds/main_song.mp3', (buffer) => {
+	audioLoader.load('sounds/main_song.mp3', (buffer) => {
     audio.setBuffer(buffer);
     audio.setLoop(true);
     audio.play();  // Start playback
 });
 
 // About fftSize https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode/fftSize
-let analyser = new THREE.AudioAnalyser(audio, fftSize);
+const analyser = new THREE.AudioAnalyser(audio, fftSize);
 
 // analyser.getFrequencyData() returns array of half size of fftSize.
 // ex. if fftSize = 2048, array size will be 1024.
@@ -105,6 +179,8 @@ for (let i = 0, len = data.length; i < len; i++)
 
 	AudioMeshArray_outline_Left.unshift(new THREE.Mesh( geometry_audio_outline, material_audio_outline ));
 	AudioMeshArray_outline_Right.unshift(new THREE.Mesh( geometry_audio_outline, material_audio_outline ));
+	AudioMeshArray_outline_Left[0].layers.enable( BLOOM_SCENE );
+	AudioMeshArray_outline_Right[0].layers.enable( BLOOM_SCENE );
 	AudioMeshArray_outline_Left[0].position.x = -i * 1.8 - 1;
 	AudioMeshArray_outline_Right[0].position.x = i * 1.8 + 1;
 	AudioMeshArray_outline_Left[0].position.z = -22;
@@ -149,11 +225,13 @@ for (let i = 0, len = data.length; i < len; i++)
 			var LeftoutlineMaterial= new THREE.MeshBasicMaterial( { color: 0x00c8ff, side: THREE.BackSide } );
 			var LeftoutlineMesh = new THREE.Mesh( outline_geometry_bar, LeftoutlineMaterial );
 			LeftoutlineMesh.scale.multiplyScalar(1.05);
+			LeftoutlineMesh.layers.enable( BLOOM_SCENE );
 			scene.add( LeftoutlineMesh );
 
 			var RightoutlineMaterial= new THREE.MeshBasicMaterial( { color: 0xfea022, side: THREE.BackSide } );
 			var RightoutlineMesh = new THREE.Mesh( outline_geometry_bar, RightoutlineMaterial );
 			RightoutlineMesh.scale.multiplyScalar(1.05);
+			RightoutlineMesh.layers.enable( BLOOM_SCENE );
 			scene.add( RightoutlineMesh );
 
 			Left_bar_pos_x = -25;
@@ -191,6 +269,7 @@ for (let i = 0, len = data.length; i < len; i++)
 
 			var EdgeBotoutlineMesh = new THREE.Mesh( outline_geometry_edge_top, EdgeTopoutlineMaterial );
 			EdgeBotoutlineMesh.position.z = edge_bot.position.z;
+			EdgeBotoutlineMesh.position.y -= 1
 
 			var EdgeSideoutlineMaterial= new THREE.MeshBasicMaterial( { color: 0xffffff, side: THREE.BackSide } );
 			const outline_geometry_edge_side = new THREE.BoxGeometry(1.5, 1.5, 41.5);
@@ -200,13 +279,16 @@ for (let i = 0, len = data.length; i < len; i++)
 			var EdgeRightoutlineMesh = new THREE.Mesh( outline_geometry_edge_side, EdgeSideoutlineMaterial );
 			EdgeRightoutlineMesh.position.x = edge_right.position.x;	
 
+			EdgeTopoutlineMesh.layers.enable( BLOOM_SCENE );
+			EdgeBotoutlineMesh.layers.enable( BLOOM_SCENE );
+			EdgeLeftoutlineMesh.layers.enable( BLOOM_SCENE );
+			EdgeRightoutlineMesh.layers.enable( BLOOM_SCENE );
 			scene.add( EdgeTopoutlineMesh, EdgeBotoutlineMesh, EdgeLeftoutlineMesh, EdgeRightoutlineMesh );
 
 			//Ball
 			const geometry_ball = new THREE.BoxGeometry(1, 1, 1);
 			const ball_m = new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: false} );
 			const ball = new THREE.Mesh( geometry_ball, ball_m );
-			
 
 			var BalloutlineMaterial= new THREE.MeshBasicMaterial( { color: 0xffffff, side: THREE.BackSide } );
 			var BalloutlineMesh = new THREE.Mesh( geometry_ball, BalloutlineMaterial );
@@ -216,10 +298,12 @@ for (let i = 0, len = data.length; i < len; i++)
 			BalloutlineMesh.scale.multiplyScalar(1.2);
 
 			scene.add (ball, BalloutlineMesh);
+			//ball.layers.enable( BLOOM_SCENE );
+			BalloutlineMesh.layers.enable( BLOOM_SCENE );
 
 
 
-			var history_depth = 18;
+			var history_depth = 30;
 			var pos_history_x = [0,0];
 			var pos_history_z = [0,0];
 
@@ -233,15 +317,17 @@ for (let i = 0, len = data.length; i < len; i++)
 			// pointLight.position.set(0, 10, 0);
 
 			//BallLight
-			const BallLight = new THREE.PointLight(0xffffff, 20, 10);
+			const BallLight = new THREE.PointLight(0xffffff, 5, 10);
+			BallLight.intensity = (0.5);
 			// //On change sa position en x, y, et z
 			BallLight.position.set(0, 4, 0);
 
 			scene.add(BallLight);
 
 			//Grid Helper
-			const gridHelper = new THREE.GridHelper(200, 50);
-			scene.add(gridHelper);
+			// const gridHelper = new THREE.GridHelper(200, 50);
+			// gridHelper.layers.toggle( BLOOM_SCENE );
+			// scene.add(gridHelper);
 
 			//La caméra est de base au centre de la scène donc on la décale
 			camera.position.z = 25;
@@ -326,7 +412,7 @@ document.addEventListener( 'keyup', onKeyUp );
 					BallAngle = Math.PI;
 				else
 					BallAngle = M_2PI;
-				SpeedMultiplier = 0.4;
+				SpeedMultiplier = 0.1;
 				LeftHit = 0;
 				RightHit = 0;
 			}
@@ -367,6 +453,7 @@ document.addEventListener( 'keyup', onKeyUp );
 				trainee_geo = new THREE.ShapeGeometry(trainee);
 				trainee_msh.unshift (new THREE.Mesh(trainee_geo, material_msh));
 				trainee_msh[0].rotation.x += M_PI_2;
+				trainee_msh[0].layers.enable( BLOOM_SCENE );
 				scene.add(trainee_msh[0]);
 
 				
@@ -390,7 +477,7 @@ document.addEventListener( 'keyup', onKeyUp );
 						else if (BallAngle < 0)
 							BallAngle += M_2PI;
 						if (SpeedMultiplier < SpeedLimit)
-							SpeedMultiplier += 0.02;
+							SpeedMultiplier += 0.01;
 							trainee_msh[0].material.color.setHex(0x00c8ff);
 							BalloutlineMesh.material.color.setHex(0x00c8ff);
 							BallLight.color.setHex(0x00c8ff);
@@ -410,7 +497,7 @@ document.addEventListener( 'keyup', onKeyUp );
 					else if (BallAngle < 0)
 						BallAngle += M_2PI;
 					if (SpeedMultiplier < SpeedLimit)
-						SpeedMultiplier += 0.02;
+						SpeedMultiplier += 0.01;
 						trainee_msh[0].material.color.setHex(0xffea022);
 						BalloutlineMesh.material.color.setHex(0xffea022);
 						BallLight.color.setHex(0xffea022);
@@ -499,7 +586,12 @@ document.addEventListener( 'keyup', onKeyUp );
 					}
 				}
 				//Lance le rendu de la scene
-				renderer.render( scene, camera );
+				// renderer.render( scene, camera );
+				
+				// renderBloom( true );
+				bloomComposer.render();
+				// render the entire scene, then render bloom scene on top
+				finalComposer.render();
 			};
 
 			animate();
