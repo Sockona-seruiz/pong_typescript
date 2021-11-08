@@ -1232,19 +1232,18 @@ function avg(arr){
 				updateAudioVisualizer();
 				moveSun();
 
-				
+
 				var vertices = plane.geometry.attributes.position.array;
 				//Lower Average = les basses (aka les traits du centre)
 				for(let i = 0; i < plane.geometry.attributes.position.count; i++){
   					// vertices[ i * 3 + 0 ] += 0 - Math.random() * (2);
   					// vertices[ i * 3 + 1 ] += 0 - Math.random() * (2);
 					//vertices[ i * 3 + 2 ] = ((upperAvg / 120) + (upperMidAvg / 110) + (lowerMidAvg / 100) + (lowerAvg / 90)) * plane_seed[i];
-					vertices[ i * 3 + 2 ] = ((upperAvgFr / 10) + (- upperMidAvgFr / 16) + (- lowerMidAvgFr / 14) + (lowerAvgFr / 12)) * plane_seed[i];
-
+					(vertices as any)[ i * 3 + 2 ] = ((upperAvgFr / 10) + (- upperMidAvgFr / 16) + (- lowerMidAvgFr / 14) + (lowerAvgFr / 12)) * plane_seed[i];
 				}
 				plane.geometry.attributes.position.needsUpdate = true;
-				plane.geometry.verticesNeedUpdate = true;
-				plane.geometry.normalsNeedUpdate = true;
+				(plane.geometry as any).verticesNeedUpdate = true;
+				(plane.geometry as any).normalsNeedUpdate = true;
 
 
 				plane.geometry.computeVertexNormals();
