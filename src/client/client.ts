@@ -39,10 +39,12 @@ config.paddle_h_2 = config.paddle_h / 2;
 config.arena_h_2 = config.arena_h / 2;
 config.arena_w_2 = config.arena_w / 2;
 
+var canResetCam = false;
+
 //Camera =====
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 camera.position.z = 30;
-camera.position.y = 38;
+camera.position.y = 43;
 camera.rotation.x = -0.86;
 
 //Render =====
@@ -117,8 +119,7 @@ finalComposer.addPass( finalPass );
 const controls_mouse = new OrbitControls( camera, renderer.domElement );
 controls_mouse.maxPolarAngle = Math.PI * 0.5;
 controls_mouse.minDistance = 1;
-controls_mouse.maxDistance = 100;
-camera.rotation.x = -0.86;
+controls_mouse.maxDistance = 1000;
 //End of Orbit Control
 
 //Window Resize =====
@@ -194,7 +195,7 @@ let controls =
 	UpArrow : false,
 	DownArrow : false,
 	Wkey : false,
-	Skey : false
+	Skey : false,
 }
 
 const onKeyDown = function ( event )
@@ -207,12 +208,20 @@ const onKeyDown = function ( event )
 		case 'KeyS':
 			controls.Skey = true;
 			break;
-
 		case 'ArrowUp':
 			controls.UpArrow = true;
 			break;
 		case 'ArrowDown':
 			controls.DownArrow = true;
+			break;
+		case 'Space':
+			if (canResetCam == true)
+			{
+				controls_mouse.reset();
+				camera.rotation.x = -0.86;
+				controls_mouse.update();
+			}
+			canResetCam = false;
 			break;
 	}
 };
@@ -311,6 +320,7 @@ scene.add( points );
 //La game loop ======
 const animate = function ()
 {
+	canResetCam = true;
 	requestAnimationFrame( animate );
 	moveBall(ball_s, paddles_s, arena_s, score_s, scene, PI_s, config, BLOOM_SCENE);
 	updateAudioVisualizer(audio_s);
