@@ -25,7 +25,7 @@ import { launchFirework } from './fireworks';
 //Faire une structure de configuration (longueuer/largeur terrain / barres)
 
 var config = {
-	arena_w : 70,
+	arena_w : 80,
 	arena_w_2 : 0,
 	arena_h : 50,
 	arena_h_2 : 0,
@@ -171,7 +171,7 @@ gltfloader.load( 'SunFull.gltf', function ( gltf )
 		if(child instanceof THREE.Mesh)
 		{
 			child.material.emissiveIntensity = 0.3;
-			child.position.set(0, 11, -24);
+			child.position.set(0, 11, - config.arena_h_2 - 3);
 		}
 	} );
 	SunMesh = gltf.scene;

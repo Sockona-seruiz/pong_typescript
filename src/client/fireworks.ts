@@ -16,14 +16,18 @@ async function setFirework_pos(scene, fireworks, firework_geo, firework_m, size,
 		for ( let i = 0; i < size * 3; i ++ ) 
 		{
 			positions[ currentIndex++ ] = x;
-
 			if (currentIndex == 1 && j > 1)
-				positions[ currentIndex++ ] = y - 2;
+			{
+				currentIndex++;
+				positions[ currentIndex - 1 ] = y - 2;
+			}
 			else if (currentIndex == 4 && j > 3)
-				positions[ currentIndex++ ] = y - 4;
+			{
+				currentIndex++;
+				positions[ currentIndex - 1 ] = y - 4;
+			}
 			else
 				positions[ currentIndex++ ] = y;
-
 			positions[ currentIndex++ ] = z;
 		}
 		y += 1;
