@@ -7,7 +7,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 import { init_score } from './score_init';
 import { updateScore } from './score';
@@ -53,7 +53,7 @@ const scene = new THREE.Scene();
 scene.fog = new THREE.FogExp2( 0x000000, 0.001 );
 
 //PostProcessing =====
-const BLOOM_SCENE = 1;
+const BLOOM_SCENE: number = 1;
 
 const bloomLayer = new THREE.Layers();
 bloomLayer.set( BLOOM_SCENE );
@@ -100,8 +100,6 @@ const finalPass = new ShaderPass(
 		void main() {
 			gl_FragColor = ( texture2D( baseTexture, vUv ) + vec4( 1.0 ) * texture2D( bloomTexture, vUv ) );
 		}`,
-		// vertexShader: document.getElementById( 'vertexshader' ).textContent,
-		// fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
 		defines: {}
 	} ), "baseTexture"
 );
@@ -158,11 +156,11 @@ var PI_s =
 var Leftcol = 0x0ae0ff;
 var Rightcol = 0xff13a5;
 
-var audio_s = init_audio(scene, config, BLOOM_SCENE);
+var audio_s = init_audio(scene, BLOOM_SCENE, config);
 
 //Sun =====
-var IncreaseBrightness = true;
-var SunMesh;
+var IncreaseBrightness: boolean = true;
+var SunMesh: THREE.Group;
 var gltfloader = new GLTFLoader().setPath( 'models/' );
 
 gltfloader.load( 'SunFull.gltf', function ( gltf )
@@ -185,8 +183,8 @@ var plane_s = init_plane(scene);
 var score_s = init_score(scene, config);
 updateScore(score_s);
 
-let paddles_s = init_paddles(scene, config, Leftcol, Rightcol, BLOOM_SCENE);
-let arena_s = init_arena(scene, config, BLOOM_SCENE);
+let paddles_s = init_paddles(scene, Leftcol, Rightcol, BLOOM_SCENE, config);
+let arena_s = init_arena(scene, BLOOM_SCENE, config);
 let ball_s = init_ball(scene, BLOOM_SCENE);
 
 //Keys =====
@@ -198,7 +196,7 @@ let controls =
 	Skey : false,
 }
 
-const onKeyDown = function ( event )
+const onKeyDown = function ( event: any )
 {
 	switch ( event.code )
 	{
@@ -226,7 +224,7 @@ const onKeyDown = function ( event )
 	}
 };
 
-const onKeyUp = function ( event )
+const onKeyUp = function ( event: any )
 {
 	switch ( event.code )
 	{

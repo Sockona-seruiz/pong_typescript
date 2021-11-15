@@ -1,6 +1,15 @@
 import * as THREE from 'three'
 
-export function init_paddles(scene, config, Leftcol, Rightcol, BLOOM_SCENE)
+export function init_paddles(scene: THREE.Scene, Leftcol: number, Rightcol: number, BLOOM_SCENE: number, config: {
+    arena_w: number;
+    arena_w_2: number;
+    arena_h: number;
+    arena_h_2: number;
+    arena_size: number;
+    paddle_w: number;
+    paddle_h: number;
+    paddle_h_2: number;
+})
 {
 	const geometry_bar = new THREE.BoxGeometry(1, 1, config.paddle_h);
 

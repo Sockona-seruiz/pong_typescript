@@ -1,34 +1,35 @@
 import * as THREE from 'three'
 
-function sleep(ms)	{
+function sleep(ms: number)	{
 	return new Promise(resolve => setTimeout(resolve, ms));
 	}
 
-async function setFirework_pos(scene, fireworks, firework_geo, firework_m, size, x, y, z, elevation)
+async function setFirework_pos(scene: THREE.Scene, fireworks:  THREE.Points, firework_geo: THREE.BufferGeometry,
+	firework_m: THREE.PointsMaterial, size: number, x: number, y: number, z: number, elevation: number)
 {
 	var positions = fireworks.geometry.attributes.position.array;
 
-	var x, y, z;
+	var x: number, y: number, z: number;
 	var	currentIndex = 0;
 
 	for (let j = 0; j < elevation; j++)
 	{
 		for ( let i = 0; i < size * 3; i ++ ) 
 		{
-			positions[ currentIndex++ ] = x;
+			(positions as any)[ currentIndex++ ] = x;
 			if (currentIndex == 1 && j > 1)
 			{
 				currentIndex++;
-				positions[ currentIndex - 1 ] = y - 2;
+				(positions as any)[ currentIndex - 1 ] = y - 2;
 			}
 			else if (currentIndex == 4 && j > 3)
 			{
 				currentIndex++;
-				positions[ currentIndex - 1 ] = y - 4;
+				(positions as any)[ currentIndex - 1 ] = y - 4;
 			}
 			else
-				positions[ currentIndex++ ] = y;
-			positions[ currentIndex++ ] = z;
+				(positions as any)[ currentIndex++ ] = y;
+			(positions as any)[ currentIndex++ ] = z;
 		}
 		y += 1;
 		currentIndex = 0;
@@ -37,11 +38,11 @@ async function setFirework_pos(scene, fireworks, firework_geo, firework_m, size,
 	}
 	y -= 1;
 	await sleep(20);
-	positions[1] = y;
-	positions[4] = y - 2;
+	(positions as any)[1] = y;
+	(positions as any)[4] = y - 2;
 	fireworks.geometry.attributes.position.needsUpdate = true;
 	// await sleep(40 + elevation);
-	positions[4] = y;
+	(positions as any)[4] = y;
 	fireworks.geometry.attributes.position.needsUpdate = true;
 
 	let velocity_x = [];
@@ -60,9 +61,9 @@ async function setFirework_pos(scene, fireworks, firework_geo, firework_m, size,
 	{
 		for ( let i = 0; i < size * 3; i ++ ) 
 		{
-			positions[ currentIndex++ ] += velocity_x[index];
-			positions[ currentIndex++ ] += velocity_y[index];
-			positions[ currentIndex++ ] += velocity_z[index];
+			(positions as any)[ currentIndex++ ] += velocity_x[index];
+			(positions as any)[ currentIndex++ ] += velocity_y[index];
+			(positions as any)[ currentIndex++ ] += velocity_z[index];
 			index++;
 			velocity_y[index] -= 0.03;
 		}
@@ -78,7 +79,7 @@ async function setFirework_pos(scene, fireworks, firework_geo, firework_m, size,
 
 }
 
-export function launchFirework(scene, x, y, z, elevation, size, fireworks_color)
+export function launchFirework(scene: THREE.Scene, x: number, y: number, z: number, elevation: number, size: number, fireworks_color: THREE.ColorRepresentation)
 {
 	// const firework_v = [];
 

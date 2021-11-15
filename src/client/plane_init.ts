@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 
-export function init_plane(scene)
+export function init_plane(scene: THREE.Scene)
 {
 	var Floorcol = 0x8108ff;
 	var M_PI_2 = Math.PI / 2;

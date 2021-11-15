@@ -1,10 +1,19 @@
 import * as THREE from 'three'
 
-export function init_score(scene, config)
+export function init_score(scene: THREE.Scene, config: {
+    arena_w: number;
+    arena_w_2: number;
+    arena_h: number;
+    arena_h_2: number;
+    arena_size: number;
+    paddle_w: number;
+    paddle_h: number;
+    paddle_h_2: number;
+})
 {
 	const x = 0, y = 0;
 
-	const rightrithcrystal = [];
+	const rightrithcrystal: any = [];
 
 	const crystalshape = new THREE.Shape();
 
@@ -61,9 +70,9 @@ export function init_score(scene, config)
 	crystalmeshMid.position.set(0.5, 14, 10);
 	rightrithcrystal.unshift(crystalmeshMid);
 
-	var leftleftcrystal = [];
-	var leftrightcrystal = [];
-	var rightleftcrystal = [];
+	var leftleftcrystal: any = [];
+	var leftrightcrystal: any = [];
+	var rightleftcrystal: any = [];
 
 	for (let i = 0; i < rightrithcrystal.length; i++)
 	{
@@ -85,7 +94,7 @@ export function init_score(scene, config)
 	}
 
 	var score_s = {
-		crystals : [],
+		crystals :[] as any,
 		ONmatleft : ONcrystalmaterialleft,
 		ONmatright : ONcrystalmaterialright,
 		OFFmat : OFFcrystalmaterial,
@@ -93,6 +102,7 @@ export function init_score(scene, config)
 		LeftScore : 0,
 		RightScore : 0
 	}
+
 	score_s.crystals[0] = leftleftcrystal;
 	score_s.crystals[1] = leftrightcrystal;
 	score_s.crystals[2] = rightleftcrystal;

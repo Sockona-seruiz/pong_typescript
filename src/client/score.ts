@@ -1,6 +1,13 @@
-var drawfct = [];
+var drawfct: any = [];
 
-drawfct[0] = function draw0(crystaltab, left, score_s)
+drawfct[0] = function draw0(crystaltab: any, left: boolean, score_s: {
+    crystals: any[];
+    ONmatleft: THREE.MeshBasicMaterial;
+    ONmatright: THREE.MeshBasicMaterial;
+    OFFmat: THREE.MeshBasicMaterial;
+    LeftScore: number;
+    RightScore: number;
+})
 {
 	let ONcrystalmaterial;
 	if (left == true)
@@ -16,7 +23,14 @@ drawfct[0] = function draw0(crystaltab, left, score_s)
 	crystaltab[6].material = ONcrystalmaterial;
 }
 
-drawfct[1] = function draw1(crystaltab, left, score_s)
+drawfct[1] = function draw1(crystaltab: any, left: boolean, score_s: {
+    crystals: any[];
+    ONmatleft: THREE.MeshBasicMaterial;
+    ONmatright: THREE.MeshBasicMaterial;
+    OFFmat: THREE.MeshBasicMaterial;
+    LeftScore: number;
+    RightScore: number;
+})
 {
 	let ONcrystalmaterial;
 	if (left == true)
@@ -32,7 +46,14 @@ drawfct[1] = function draw1(crystaltab, left, score_s)
 	crystaltab[6].material = score_s.OFFmat;
 }
 
-drawfct[2] = function draw2(crystaltab, left, score_s)
+drawfct[2] = function draw2(crystaltab: any, left: boolean, score_s: {
+    crystals: any[];
+    ONmatleft: THREE.MeshBasicMaterial;
+    ONmatright: THREE.MeshBasicMaterial;
+    OFFmat: THREE.MeshBasicMaterial;
+    LeftScore: number;
+    RightScore: number;
+})
 {
 	let ONcrystalmaterial;
 	if (left == true)
@@ -48,7 +69,14 @@ drawfct[2] = function draw2(crystaltab, left, score_s)
 	crystaltab[6].material = ONcrystalmaterial;
 }
 
-drawfct[3] = function draw3(crystaltab, left, score_s)
+drawfct[3] = function draw3(crystaltab: any, left: boolean, score_s: {
+    crystals: any[];
+    ONmatleft: THREE.MeshBasicMaterial;
+    ONmatright: THREE.MeshBasicMaterial;
+    OFFmat: THREE.MeshBasicMaterial;
+    LeftScore: number;
+    RightScore: number;
+})
 {
 	let ONcrystalmaterial;
 	if (left == true)
@@ -64,7 +92,14 @@ drawfct[3] = function draw3(crystaltab, left, score_s)
 	crystaltab[6].material = ONcrystalmaterial;
 }
 
-drawfct[4] = function draw4(crystaltab, left, score_s)
+drawfct[4] = function draw4(crystaltab: any, left: boolean, score_s: {
+    crystals: any[];
+    ONmatleft: THREE.MeshBasicMaterial;
+    ONmatright: THREE.MeshBasicMaterial;
+    OFFmat: THREE.MeshBasicMaterial;
+    LeftScore: number;
+    RightScore: number;
+})
 {
 	let ONcrystalmaterial;
 	if (left == true)
@@ -80,7 +115,14 @@ drawfct[4] = function draw4(crystaltab, left, score_s)
 	crystaltab[6].material = score_s.OFFmat;
 }
 
-drawfct[5] = function draw5(crystaltab, left, score_s)
+drawfct[5] = function draw5(crystaltab: any, left: boolean, score_s: {
+    crystals: any[];
+    ONmatleft: THREE.MeshBasicMaterial;
+    ONmatright: THREE.MeshBasicMaterial;
+    OFFmat: THREE.MeshBasicMaterial;
+    LeftScore: number;
+    RightScore: number;
+})
 {
 	let ONcrystalmaterial;
 	if (left == true)
@@ -96,7 +138,14 @@ drawfct[5] = function draw5(crystaltab, left, score_s)
 	crystaltab[6].material = ONcrystalmaterial;
 }
 
-drawfct[6] = function draw6(crystaltab, left, score_s)
+drawfct[6] = function draw6(crystaltab: any, left: boolean, score_s: {
+    crystals: any[];
+    ONmatleft: THREE.MeshBasicMaterial;
+    ONmatright: THREE.MeshBasicMaterial;
+    OFFmat: THREE.MeshBasicMaterial;
+    LeftScore: number;
+    RightScore: number;
+})
 {
 	let ONcrystalmaterial;
 	if (left == true)
@@ -112,7 +161,14 @@ drawfct[6] = function draw6(crystaltab, left, score_s)
 	crystaltab[6].material = ONcrystalmaterial;
 }
 
-drawfct[7] = function draw7(crystaltab, left, score_s)
+drawfct[7] = function draw7(crystaltab: any, left: boolean, score_s: {
+    crystals: any[];
+    ONmatleft: THREE.MeshBasicMaterial;
+    ONmatright: THREE.MeshBasicMaterial;
+    OFFmat: THREE.MeshBasicMaterial;
+    LeftScore: number;
+    RightScore: number;
+})
 {
 	let ONcrystalmaterial;
 	if (left == true)
@@ -128,7 +184,14 @@ drawfct[7] = function draw7(crystaltab, left, score_s)
 	crystaltab[6].material = ONcrystalmaterial;
 }
 
-drawfct[8] = function draw8(crystaltab, left, score_s)
+drawfct[8] = function draw8(crystaltab: any, left: boolean, score_s: {
+    crystals: any[];
+    ONmatleft: THREE.MeshBasicMaterial;
+    ONmatright: THREE.MeshBasicMaterial;
+    OFFmat: THREE.MeshBasicMaterial;
+    LeftScore: number;
+    RightScore: number;
+})
 {
 	let ONcrystalmaterial;
 	if (left == true)
@@ -144,7 +207,14 @@ drawfct[8] = function draw8(crystaltab, left, score_s)
 	crystaltab[6].material = ONcrystalmaterial;
 }
 
-drawfct[9] = function draw9(crystaltab, left, score_s)
+drawfct[9] = function draw9(crystaltab: any, left: boolean, score_s: {
+    crystals: any[];
+    ONmatleft: THREE.MeshBasicMaterial;
+    ONmatright: THREE.MeshBasicMaterial;
+    OFFmat: THREE.MeshBasicMaterial;
+    LeftScore: number;
+    RightScore: number;
+})
 {
 	let ONcrystalmaterial;
 	if (left == true)
@@ -160,7 +230,14 @@ drawfct[9] = function draw9(crystaltab, left, score_s)
 	crystaltab[6].material = ONcrystalmaterial;
 }
 
-export function updateScore(score_s)
+export function updateScore(score_s: {
+    crystals: any[];
+    ONmatleft: THREE.MeshBasicMaterial;
+    ONmatright: THREE.MeshBasicMaterial;
+    OFFmat: THREE.MeshBasicMaterial;
+    LeftScore: number;
+    RightScore: number;
+})
 {
 	if (score_s.LeftScore > 99)
 		score_s.LeftScore = 99;

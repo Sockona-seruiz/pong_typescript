@@ -1,4 +1,4 @@
-export function resetParams(ball_s, paddles_s, x)
+export function resetParams(ball_s: any, paddles_s: any, x: number)
 {
 	ball_s.ball.position.x = 0;
 	ball_s.ball.position.z = 0;
@@ -29,3 +29,14 @@ export function resetParams(ball_s, paddles_s, x)
 	ball_s.LeftHit = 0;
 	ball_s.RightHit = 0;
 }
+
+// let paddles_s: {
+//     bar_left: THREE.Mesh<THREE.BoxGeometry, THREE.MeshStandardMaterial>;
+//     bar_left_out: THREE.Mesh<THREE.BoxGeometry, THREE.MeshBasicMaterial>;
+// 	bar_right: THREE.Mesh<THREE.BoxGeometry, THREE.MeshStandardMaterial>;
+// 	bar_right_out: THREE.Mesh<THREE.BoxGeometry, THREE.MeshBasicMaterial>;
+// 	Lbar_pos_x: number,
+// 	Rbar_pos_x: number,
+// 	left_col: number,
+//     right_col: number;
+// }

@@ -1,10 +1,10 @@
-function avg(arr)
+function avg(arr: any)
 {
-	var total = arr.reduce(function(sum, b) { return sum + b; });
+	var total = arr.reduce(function(sum: any, b: any) { return sum + b; });
 	return (total / arr.length);
 }
 
-export function updateAudioVisualizer(audio_s)
+export function updateAudioVisualizer(audio_s: any)
 {
 	audio_s.FrqData = audio_s.analyser.getFrequencyData();
 	audio_s.avgFreq = audio_s.analyser.getAverageFrequency();

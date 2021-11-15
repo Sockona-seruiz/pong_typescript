@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 
-export function init_ball(scene, BLOOM_SCENE)
+export function init_ball(scene: THREE.Scene, BLOOM_SCENE: number)
 {
 	const geometry_ball = new THREE.BoxGeometry(1, 1, 1);
 	const ball_m = new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: false} );

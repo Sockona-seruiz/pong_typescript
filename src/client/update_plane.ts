@@ -1,4 +1,4 @@
-export function updateplane(plane_s, audio_s)
+export function updateplane(plane_s: any, audio_s: any)
 {
 	plane_s.vertices = plane_s.plane.geometry.attributes.position.array;
 	//Lower Average = les basses (aka les traits du centre)

@@ -1,8 +1,8 @@
-export function moveSun(SunMesh, IncreaseBrightness)
+export function moveSun(SunMesh: any, IncreaseBrightness: any)
 {
 	if (SunMesh)
 	{
-		SunMesh.traverse( function ( child ) {
+		SunMesh.traverse( function ( child: any ) {
 		if ( child.isMesh )
 		{
 			if (IncreaseBrightness == true)

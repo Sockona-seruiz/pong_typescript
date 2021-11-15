@@ -4,7 +4,7 @@ import { updateScore } from './score';
 import { resetParams } from './reset_params';
 import { launchFirework } from './fireworks';
 
-export function moveBall(ball_s, paddles_s, arena_s, score_s, scene, PI_s, config, BLOOM_SCENE)
+export function moveBall(ball_s: any, paddles_s: any, arena_s: any, score_s: any, scene: THREE.Scene, PI_s: any, config: any, BLOOM_SCENE: number)
 {
 	var PosDiff = 0;
 
